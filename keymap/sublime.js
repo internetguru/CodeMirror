@@ -282,7 +282,7 @@
     });
   };
 
-  map[ctrl + "T"] = "transposeChars";
+  //map[ctrl + "T"] = "transposeChars";
 
   function sortLines(cm, caseSensitive) {
     var ranges = cm.listSelections(), toSort = [], selected;
