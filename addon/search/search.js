@@ -114,7 +114,10 @@
 
   function doSearch(cm, rev, persistent) {
     var state = getSearchState(cm);
-    if (state.query) return findNext(cm, rev);
+    if (state.query) {
+      state.posFrom = state.posTo = cm.getCursor();
+      return findNext(cm, rev);
+    }
     var q = cm.getSelection() || state.lastQuery;
     if (persistent && cm.openDialog) {
       var hiding = null
@@ -122,7 +125,7 @@
         CodeMirror.e_stop(event);
         if (!query) return;
         if (query != state.queryText) startSearch(cm, state, query);
-        if (hiding) hiding.style.opacity = 1
+        if (hiding) hiding.style.opacity = 1;
         findNext(cm, event.shiftKey, function(_, to) {
           var dialog
           if (to.line < 3 && document.querySelector &&
@@ -140,10 +143,6 @@
         });
       });
     }
-   // scroll to view fix
-   window.IGCMS.CodeMirror.scrollToCursor(cm);
-   // end scroll to view fix
-
   }
 
   function findNext(cm, rev, callback) {cm.operation(function() {
@@ -157,6 +156,9 @@
     cm.scrollIntoView({from: cursor.from(), to: cursor.to()}, 20);
     state.posFrom = cursor.from(); state.posTo = cursor.to();
     if (callback) callback(cursor.from(), cursor.to())
+    // scroll to view fix
+    window.IGCMS.CodeMirror.scrollToCursor(cm);
+    // end scroll to view fix
   });}
 
   function clearSearch(cm) {cm.operation(function() {
