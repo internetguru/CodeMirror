@@ -138,7 +138,7 @@
       dialog(cm, queryDialog, "Search for:", q, function(query) {
         if (query && !state.query) cm.operation(function() {
           startSearch(cm, state, query);
-          state.posFrom = state.posTo = cm.getCursor();
+          // state.posFrom = state.posTo = cm.getCursor();
           findNext(cm, rev);
         });
       });
@@ -164,6 +164,7 @@
   function clearSearch(cm) {cm.operation(function() {
     var state = getSearchState(cm);
     state.lastQuery = state.query;
+    state.posFrom = state.posTo = null;
     if (!state.query) return;
     state.query = state.queryText = null;
     cm.removeOverlay(state.overlay);
