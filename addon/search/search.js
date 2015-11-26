@@ -91,15 +91,8 @@
         findNext(cm, rev);
 
         // scroll to view fix
-        var cursor = cm.getCursor();
-        var line = cursor.line;
-        var char = cursor.ch;
-        cm.setCursor({line:line,ch:char});
-        var myHeight = cm.getScrollInfo().clientHeight;
-        var coords = cm.charCoords({line: line, ch: char}, "global");
-        window.scrollTo(0, (coords.top + coords.bottom - myHeight) / 2);
+        window.IGCMS.CodeMirror.scrollToCursor(cm);
         // end scroll to view fix
-
       });
     });
   }
