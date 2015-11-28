@@ -115,7 +115,6 @@
   function doSearch(cm, rev, persistent) {
     var state = getSearchState(cm);
     if (state.query) {
-      state.posFrom = state.posTo = cm.getCursor();
       return findNext(cm, rev);
     }
     var q = cm.getSelection() || state.lastQuery;
@@ -138,7 +137,6 @@
       dialog(cm, queryDialog, "Search for:", q, function(query) {
         if (query && !state.query) cm.operation(function() {
           startSearch(cm, state, query);
-          // state.posFrom = state.posTo = cm.getCursor();
           findNext(cm, rev);
         });
       });
@@ -147,7 +145,9 @@
 
   function findNext(cm, rev, callback) {cm.operation(function() {
     var state = getSearchState(cm);
-    var cursor = getSearchCursor(cm, state.query, rev ? state.posFrom : state.posTo);
+    // find according to current cursor position fix
+    var cursor = getSearchCursor(cm, state.query, rev ? cm.getCursor(true) : cm.getCursor(false));
+    // end fix
     if (!cursor.find(rev)) {
       cursor = getSearchCursor(cm, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));
       if (!cursor.find(rev)) return;
