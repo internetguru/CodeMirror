@@ -134,9 +134,12 @@
     return {from: Pos(pos.line, start), to: Pos(pos.line, end), word: line.slice(start, end)};
   }
 
-  cmds[map[ctrl + "D"] = "selectNextOccurrence"] = function(cm) {
+  var cK = ctrl + "K ";
+
+  function findNextSelection(cm, skip) {
     var from = cm.getCursor("from"), to = cm.getCursor("to");
     var fullWord = cm.state.sublimeFindFullWord == cm.doc.sel;
+    if(skip) cm.undoSelection();
     if (CodeMirror.cmpPos(from, to) == 0) {
       var word = wordAt(cm, from);
       if (!word.word) return;
@@ -156,7 +159,15 @@
     }
     if (fullWord)
       cm.state.sublimeFindFullWord = cm.doc.sel;
+  }
+
+  cmds[map[ctrl + "D"] = "selectNextOccurrence"] = function(cm) {
+    findNextSelection(cm);
   };
+
+  cmds[map[cK + ctrl + "D"] = "skipOccurrence"] = function(cm) {
+    findNextSelection(cm, true);
+  }
 
   var mirror = "(){}[]";
   function selectBetweenBrackets(cm) {
@@ -389,8 +400,6 @@
   };
 
   map["Alt-Q"] = "wrapLines";
-
-  var cK = ctrl + "K ";
 
   function modifyWordOrSelection(cm, mod) {
     cm.operation(function() {
