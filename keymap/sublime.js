@@ -273,7 +273,7 @@
           var actual = line - offset;
           if (line == obj.end) head = Pos(actual, cm.getLine(actual).length + 1);
           if (actual < cm.lastLine()) {
-            cm.replaceRange(" ", Pos(actual), Pos(actual + 1, /^\s*/.exec(cm.getLine(actual + 1))[0].length));
+            cm.replaceRange(" ", Pos(actual, cm.getLine(actual).length - /\s*$/.exec(cm.getLine(actual))[0].length), Pos(actual + 1, /^\s*/.exec(cm.getLine(actual + 1))[0].length));
             ++offset;
           }
         }
