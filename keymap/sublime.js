@@ -147,7 +147,7 @@
       fullWord = true;
     } else {
       var text = cm.getRange(from, to);
-      var query = new RegExp(fullWord, "i") ? new RegExp("\\b" + text + "\\b", "i") : text;
+      var query = fullWord ? new RegExp("\\b" + text + "\\b", "i") : new RegExp(text, "i");
       var cur = cm.getSearchCursor(query, to);
       if (cur.findNext()) {
         cm.addSelection(cur.from(), cur.to());
