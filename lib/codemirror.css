@@ -1,9 +1,9 @@
 /* BASICS */
 
-.CodeMirror {
-  /* Set height, width, borders, and global font properties here */
-  font-family: monospace;
-  height: 300px;
+div.CodeMirror {
+  font-family: "Emilbus Mono","Lucida Console",monospace;
+  line-height: 120%;
+  height: auto;
   color: black;
 }
 
@@ -150,10 +150,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 }
 
 .CodeMirror-scroll {
-  overflow: scroll !important; /* Things will break if this is overridden */
+  overflow: hidden !important; /* Things will break if this is overridden */
   /* 30px is the magic margin used to hide the element's real scrollbars */
   /* See overflow: hidden in .CodeMirror */
-  margin-bottom: -30px; margin-right: -30px;
+  margin-bottom: -30px;
+  margin-right: 0;
   padding-bottom: 30px;
   height: 100%;
   outline: none; /* Prevent dragging from highlighting the element */
