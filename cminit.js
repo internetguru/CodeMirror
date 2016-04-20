@@ -1,5 +1,7 @@
 (function(win){
 
+  // if(typeof IGCMS === "undefined") throw "IGCMS is not defined";
+
   var Config = {};
   Config.help = "?";
   Config.helpTitle = "Klávesové zkratky";
@@ -105,6 +107,12 @@
       win.scrollTo(0, scrollTo);
     },
     fireEvents = function() {
+      // cm.on("change",function(cm,change) {
+      //   if(!IGCMS.Editable) return;
+      //   var form = IGCMS.Editable.getParentForm(textarea);
+      //   if(!form || !form.classList.contains(IGCMS.Editable.getEditableClass())) return;
+      //   IGCMS.Editable.setModified();
+      // });
       win.onkeydown = function(e) {
         var key;
         var isShift;
@@ -242,5 +250,6 @@
   var textareas = document.querySelectorAll('textarea.codemirror');
   var cm = new SyntaxCodeMirror();
   cm.init(textareas[0], cm);
+  // win.IGCMS.CodeMirror = cm;
 
 })(window);
