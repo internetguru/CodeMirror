@@ -133,6 +133,7 @@
               dialog.getBoundingClientRect().bottom - 4 > cm.cursorCoords(to, "window").top)
             (hiding = dialog).style.opacity = .4
         })
+        scrollToCursor(cm);
       });
     } else {
       dialog(cm, queryDialog, "Search for:", q, function(query) {
@@ -140,9 +141,30 @@
           startSearch(cm, state, query);
           state.posFrom = state.posTo = cm.getCursor();
           findNext(cm, rev);
+          scrollToCursor(cm);
         });
       });
     }
+  }
+
+  function scrollToCursor(cm) {
+    var cursor = cm.getCursor();
+    var line = cursor.line;
+    var char = cursor.ch;
+    var range = getSelectedRange(cm, false);
+    cm.setCursor({line:line,ch:char});
+    var myHeight = cm.getScrollInfo().clientHeight;
+    var coords = cm.charCoords({line: line, ch: char}, "global");
+    window.scrollTo(0, (coords.top + coords.bottom - myHeight) / 2);
+    cm.setSelection(range.from, range.to);
+  }
+
+  function getSelectedRange(cm, all) {
+    var start = cm.getCursor(true),
+        end = cm.getCursor(false);
+    if(typeof all === "undefined") all = true;
+    if(all && start == end) return { from: {line: 0, ch: 0}, to: {line: cm.lineCount()} }
+    return { from: cm.getCursor(true), to: cm.getCursor(false) };
   }
 
   function findNext(cm, rev, callback) {cm.operation(function() {
@@ -156,6 +178,7 @@
     cm.scrollIntoView({from: cursor.from(), to: cursor.to()}, 20);
     state.posFrom = cursor.from(); state.posTo = cursor.to();
     if (callback) callback(cursor.from(), cursor.to())
+    scrollToCursor(cm);
   });}
 
   function clearSearch(cm) {cm.operation(function() {
@@ -228,4 +251,6 @@
   CodeMirror.commands.clearSearch = clearSearch;
   CodeMirror.commands.replace = replace;
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
+  CodeMirror.commands.scrollToCursor = function(cm) {scrollToCursor(cm);};
+  CodeMirror.commands.getSelectedRange = function(cm, all) {getSelectedRange(cm, all);};
 });
