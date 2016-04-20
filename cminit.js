@@ -59,31 +59,13 @@
       }
       active = !active;
     },
-    getSelectedRange = function(c, all) {
-      var start = c.getCursor(true),
-          end = c.getCursor(false);
-      if(typeof all === "undefined") all = true;
-      if(all && start == end) return { from: {line: 0, ch: 0}, to: {line: c.lineCount()} }
-      return { from: c.getCursor(true), to: c.getCursor(false) };
-    },
     autoFormatSelection = function(c) {
-      var range = getSelectedRange(c);
+      var range = c.getSelectedRange(c);
       c.autoFormatRange(range.from, range.to);
     },
     autoIndentSelection = function(c) {
-      var range = getSelectedRange(c);
+      var range = c.getSelectedRange(c);
       c.autoIndentRange(range.from, range.to);
-    },
-    scrollToCursor = function(c) {
-      var cursor = c.getCursor();
-      var line = cursor.line;
-      var char = cursor.ch;
-      var range = getSelectedRange(c, false);
-      c.setCursor({line:line,ch:char});
-      var myHeight = c.getScrollInfo().clientHeight;
-      var coords = c.charCoords({line: line, ch: char}, "global");
-      win.scrollTo(0, (coords.top + coords.bottom - myHeight) / 2);
-      c.setSelection(range.from, range.to);
     },
     toggleFullScreen = function(c, off) {
       if(typeof off === "undefined") off = false;
@@ -242,8 +224,7 @@
         _init();
         initActivateButton();
         fireEvents();
-      },
-      scrollToCursor: scrollToCursor
+      }
     }
   };
 
