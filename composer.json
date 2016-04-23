@@ -1,0 +1,10 @@
+{
+    "name": "internetguru/codemirror",
+    "authors": [
+        {
+            "name": "petrzpav",
+            "email": "pavel@petrzela.eu"
+        }
+    ],
+    "require": {}
+}
