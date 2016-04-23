@@ -124,6 +124,7 @@
       }
       cm.setSelections(newSelection);
     });
+    cm.execCommand("indentAuto");
   }
 
   cmds[map[ctrl + "Enter"] = "insertLineAfter"] = function(cm) { return insertLine(cm, false); };
@@ -137,9 +138,23 @@
     return {from: Pos(pos.line, start), to: Pos(pos.line, end), word: line.slice(start, end)};
   }
 
+  var cK = ctrl + "K ";
+  var canSkip = false;
+
   cmds[map[ctrl + "D"] = "selectNextOccurrence"] = function(cm) {
+    findNextSelection(cm);
+    canSkip = true;
+  };
+
+  cmds[map[cK + ctrl + "D"] = "skipOccurrence"] = function(cm) {
+    if(canSkip) findNextSelection(cm, true);
+    canSkip = false;
+  }
+
+  function findNextSelection(cm, skip) {
     var from = cm.getCursor("from"), to = cm.getCursor("to");
     var fullWord = cm.state.sublimeFindFullWord == cm.doc.sel;
+    if(skip) cm.undoSelection();
     if (CodeMirror.cmpPos(from, to) == 0) {
       var word = wordAt(cm, from);
       if (!word.word) return;
@@ -147,7 +162,7 @@
       fullWord = true;
     } else {
       var text = cm.getRange(from, to);
-      var query = fullWord ? new RegExp("\\b" + text + "\\b") : text;
+      var query = fullWord ? new RegExp("\\b" + text + "\\b", "i") : new RegExp(text, "i");
       var cur = cm.getSearchCursor(query, to);
       if (cur.findNext()) {
         cm.addSelection(cur.from(), cur.to());
@@ -267,7 +282,7 @@
           var actual = line - offset;
           if (line == obj.end) head = Pos(actual, cm.getLine(actual).length + 1);
           if (actual < cm.lastLine()) {
-            cm.replaceRange(" ", Pos(actual), Pos(actual + 1, /^\s*/.exec(cm.getLine(actual + 1))[0].length));
+            cm.replaceRange(" ", Pos(actual, cm.getLine(actual).length - /\s*$/.exec(cm.getLine(actual))[0].length), Pos(actual + 1, /^\s*/.exec(cm.getLine(actual + 1))[0].length));
             ++offset;
           }
         }
@@ -395,8 +410,6 @@
   };
 
   map["Alt-Q"] = "wrapLines";
-
-  var cK = ctrl + "K ";
 
   function modifyWordOrSelection(cm, mod) {
     cm.operation(function() {

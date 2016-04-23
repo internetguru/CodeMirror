@@ -121,11 +121,8 @@
       persistentDialog(cm, queryDialog, q, function(query, event) {
         CodeMirror.e_stop(event);
         if (!query) return;
-        if (query != state.queryText) {
-          startSearch(cm, state, query);
-          state.posFrom = state.posTo = cm.getCursor();
-        }
-        if (hiding) hiding.style.opacity = 1
+        if (query != state.queryText) startSearch(cm, state, query);
+        if (hiding) hiding.style.opacity = 1;
         findNext(cm, event.shiftKey, function(_, to) {
           var dialog
           if (to.line < 3 && document.querySelector &&
@@ -133,21 +130,42 @@
               dialog.getBoundingClientRect().bottom - 4 > cm.cursorCoords(to, "window").top)
             (hiding = dialog).style.opacity = .4
         })
+        scrollToCursor(cm);
       });
     } else {
       dialog(cm, queryDialog, "Search for:", q, function(query) {
         if (query && !state.query) cm.operation(function() {
           startSearch(cm, state, query);
-          state.posFrom = state.posTo = cm.getCursor();
-          findNext(cm, rev);
+          findNext(cm, rev, null, true);
+          scrollToCursor(cm);
         });
       });
     }
   }
 
-  function findNext(cm, rev, callback) {cm.operation(function() {
+  function scrollToCursor(cm) {
+    var cursor = cm.getCursor();
+    var line = cursor.line;
+    var char = cursor.ch;
+    var range = getSelectedRange(cm, false);
+    cm.setCursor({line:line,ch:char});
+    var myHeight = cm.getScrollInfo().clientHeight;
+    var coords = cm.charCoords({line: line, ch: char}, "global");
+    window.scrollTo(0, (coords.top + coords.bottom - myHeight) / 2);
+    cm.setSelection(range.from, range.to);
+  }
+
+  function getSelectedRange(cm, all) {
+    var start = cm.getCursor(true),
+        end = cm.getCursor(false);
+    if(typeof all === "undefined") all = true;
+    if(all && start == end) return { from: {line: 0, ch: 0}, to: {line: cm.lineCount()} }
+    return { from: cm.getCursor(true), to: cm.getCursor(false) };
+  }
+
+  function findNext(cm, rev, callback, start=false) {cm.operation(function() {
     var state = getSearchState(cm);
-    var cursor = getSearchCursor(cm, state.query, rev ? state.posFrom : state.posTo);
+    var cursor = getSearchCursor(cm, state.query, start == true ? CodeMirror.Pos(cm.firstLine(), 0) : (rev ? cm.getCursor(true) : cm.getCursor(false)));
     if (!cursor.find(rev)) {
       cursor = getSearchCursor(cm, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));
       if (!cursor.find(rev)) return;
@@ -156,6 +174,7 @@
     cm.scrollIntoView({from: cursor.from(), to: cursor.to()}, 20);
     state.posFrom = cursor.from(); state.posTo = cursor.to();
     if (callback) callback(cursor.from(), cursor.to())
+    scrollToCursor(cm);
   });}
 
   function clearSearch(cm) {cm.operation(function() {
@@ -228,4 +247,6 @@
   CodeMirror.commands.clearSearch = clearSearch;
   CodeMirror.commands.replace = replace;
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
+  CodeMirror.commands.scrollToCursor = function(cm) {scrollToCursor(cm);};
+  CodeMirror.commands.getSelectedRange = function(cm, all) {getSelectedRange(cm, all);};
 });
