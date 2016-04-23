@@ -163,7 +163,8 @@
     return { from: cm.getCursor(true), to: cm.getCursor(false) };
   }
 
-  function findNext(cm, rev, callback, start=false) {cm.operation(function() {
+  function findNext(cm, rev, callback, start) {cm.operation(function() {
+    if(typeof start === 'undefined') start = false;
     var state = getSearchState(cm);
     var cursor = getSearchCursor(cm, state.query, start == true ? CodeMirror.Pos(cm.firstLine(), 0) : (rev ? cm.getCursor(true) : cm.getCursor(false)));
     if (!cursor.find(rev)) {
