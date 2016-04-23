@@ -223,6 +223,6 @@
   var textareas = document.querySelectorAll('textarea.codemirror');
   var cm = new SyntaxCodeMirror();
   cm.init(textareas[0], cm);
-  win.CodeMirror = cm;
+  win.CodeMirrorInstance = cm;
 
 })(window);
