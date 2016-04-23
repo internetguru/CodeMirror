@@ -1,3 +1,4 @@
+převedení projektu do composeru
 sublime.js: Ctrl+d ignoruje velikosti písmen
 sublime.js: přidána podpora Ctrl+D Ctrl+K pro přeskočení nalezeného výskytu
 search.js: vyhledávání podle aktuální pozice kurzoru, z dialogu vždy od začátku souboru
