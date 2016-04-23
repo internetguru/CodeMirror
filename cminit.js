@@ -60,11 +60,11 @@
       active = !active;
     },
     autoFormatSelection = function(c) {
-      var range = c.getSelectedRange(c);
+      var range = c.execCommand("getSelectedRange");
       c.autoFormatRange(range.from, range.to);
     },
     autoIndentSelection = function(c) {
-      var range = c.getSelectedRange(c);
+      var range = c.execCommand("getSelectedRange");
       c.autoIndentRange(range.from, range.to);
     },
     toggleFullScreen = function(c, off) {

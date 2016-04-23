@@ -248,5 +248,5 @@
   CodeMirror.commands.replace = replace;
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
   CodeMirror.commands.scrollToCursor = function(cm) {scrollToCursor(cm);};
-  CodeMirror.commands.getSelectedRange = function(cm, all) {getSelectedRange(cm, all);};
+  CodeMirror.commands.getSelectedRange = function(cm) { return getSelectedRange(cm);};
 });
