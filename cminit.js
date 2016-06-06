@@ -216,6 +216,9 @@
         _init();
         initActivateButton();
         fireEvents();
+      },
+      getInstance : function() {
+        return cm;
       }
     }
   };
@@ -223,6 +226,6 @@
   var textareas = document.querySelectorAll('textarea.codemirror');
   var cm = new SyntaxCodeMirror();
   cm.init(textareas[0], cm);
-  win.CodeMirrorInstance = cm;
+  win.CodeMirrorInstance = cm.getInstance();
 
 })(window);
