@@ -121,11 +121,8 @@
       persistentDialog(cm, queryDialog, q, function(query, event) {
         CodeMirror.e_stop(event);
         if (!query) return;
-        if (query != state.queryText) {
-          startSearch(cm, state, query);
-          state.posFrom = state.posTo = cm.getCursor();
-        }
-        if (hiding) hiding.style.opacity = 1
+        if (query != state.queryText) startSearch(cm, state, query);
+        if (hiding) hiding.style.opacity = 1;
         findNext(cm, event.shiftKey, function(_, to) {
           var dialog
           if (to.line < 3 && document.querySelector &&
@@ -139,8 +136,7 @@
       dialog(cm, queryDialog, "Search for:", q, function(query) {
         if (query && !state.query) cm.operation(function() {
           startSearch(cm, state, query);
-          state.posFrom = state.posTo = cm.getCursor();
-          findNext(cm, rev);
+          findNext(cm, rev, null, true);
           scrollToCursor(cm);
         });
       });
@@ -167,9 +163,10 @@
     return { from: cm.getCursor(true), to: cm.getCursor(false) };
   }
 
-  function findNext(cm, rev, callback) {cm.operation(function() {
+  function findNext(cm, rev, callback, start) {cm.operation(function() {
+    if(typeof start === 'undefined') start = false;
     var state = getSearchState(cm);
-    var cursor = getSearchCursor(cm, state.query, rev ? state.posFrom : state.posTo);
+    var cursor = getSearchCursor(cm, state.query, start == true ? CodeMirror.Pos(cm.firstLine(), 0) : (rev ? cm.getCursor(true) : cm.getCursor(false)));
     if (!cursor.find(rev)) {
       cursor = getSearchCursor(cm, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));
       if (!cursor.find(rev)) return;
@@ -252,5 +249,5 @@
   CodeMirror.commands.replace = replace;
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
   CodeMirror.commands.scrollToCursor = function(cm) {scrollToCursor(cm);};
-  CodeMirror.commands.getSelectedRange = function(cm, all) {getSelectedRange(cm, all);};
+  CodeMirror.commands.getSelectedRange = function(cm) { return getSelectedRange(cm);};
 });
