@@ -18,8 +18,8 @@
   Config.findTitle = "Ctrl+F";
   Config.replace = "Nahradit";
   Config.replaceTitle = "Ctrl+H";
-  Config.space = "NBSP";
-  Config.spaceTitle = "Označit pevné mezery";
+  Config.space = "Regexp ze souboru";
+  Config.spaceTitle = "";
   Config.appName = "CodeMirror";
 
   var SyntaxCodeMirror = function() {
@@ -67,15 +67,35 @@
       var range = c.execCommand("getSelectedRange");
       c.autoIndentRange(range.from, range.to);
     },
-    showNBSP = function(c) {
+    showRegexpFile = function(c) {
       var text = c.getValue();
-      var dialogTempl = 'File: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
+      var dialogTempl = 'File path, eg. /files/reg.txt: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
       c.openDialog(dialogTempl, function (filePath) {
 	var request = new XMLHttpRequest();
-        request.open('GET', "/files/" + filePath);
+        request.open('GET', filePath);
         request.responseType = 'text';
-        request.onload = function() {
-          console.log(request.response);
+        request.onreadystatechange = function() {
+          if (request.readyState !== XMLHttpRequest.DONE) {
+            return;
+          }
+          if (request.status != 200 && request.status != 301) {
+            c.openNotification("Failed to get file " + filePath + " [" + request.status + "]", {duration: 3000});
+            return;
+          }
+          var data = request.response;
+          data = data.replace(/(<([^>]+)>)/ig,"");
+          var lines = data.split("\n");
+          var results = [];
+          for(var i = 0; i < lines.length; i++){
+            var line = lines[i].trim();  
+            if(!line.startsWith("s/")) {
+              continue;
+            }
+            var parts = line.match(/^s\/(.+)\/(.+)\/(.+)/);
+            var pattern = new RegExp(parts[1], parts[3]);
+            text = text.replace(pattern, parts[2]);
+          }
+          c.setValue(text);
         };
         request.send();
       });
@@ -217,7 +237,7 @@
         autoFormatSelection(cm);
       }
       spaceButton.onclick = function() {
-        showNBSP(cm);
+        showRegexpFile(cm);
       }
       disableButton.onclick = function() {
         toggleApp(cm);
