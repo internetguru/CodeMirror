@@ -77,7 +77,7 @@ ul.codemirror-user-controll:after {
     display: table;
     clear: both;
 }
-ul.codemirror-user-controll li:nth-child(3) {
+ul.codemirror-user-controll li:nth-child(4) {
     flex-grow: 2;
 }
 ul.codemirror-user-controll li button:hover,

@@ -18,6 +18,8 @@
   Config.findTitle = "Ctrl+F";
   Config.replace = "Nahradit";
   Config.replaceTitle = "Ctrl+H";
+  Config.space = "NBSP";
+  Config.spaceTitle = "Označit pevné mezery";
   Config.appName = "CodeMirror";
 
   var SyntaxCodeMirror = function() {
@@ -65,6 +67,19 @@
       var range = c.execCommand("getSelectedRange");
       c.autoIndentRange(range.from, range.to);
     },
+    showNBSP = function(c) {
+      var text = c.getValue();
+      var dialogTempl = 'File: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
+      c.openDialog(dialogTempl, function (filePath) {
+	var request = new XMLHttpRequest();
+        request.open('GET', "/files/" + filePath);
+        request.responseType = 'text';
+        request.onload = function() {
+          console.log(request.response);
+        };
+        request.send();
+      });
+    }
     toggleFullScreen = function(c, off) {
       if(typeof off === "undefined") off = false;
       if(!active) return;
@@ -179,6 +194,8 @@
       replaceButton.title = Config.replaceTitle;
       formatButton = appendButton(Config.format, ul);
       formatButton.title = Config.formatTitle;
+      spaceButton = appendButton(Config.space, ul);
+      spaceButton.title = Config.spaceTitle;
       helpButton = appendButton(Config.help, ul, Config.helpHref);
       helpButton.title = Config.helpTitle;
       fullScreenButton = appendButton(Config.fullscreenEnable, ul);
@@ -198,6 +215,9 @@
       }
       formatButton.onclick = function() {
         autoFormatSelection(cm);
+      }
+      spaceButton.onclick = function() {
+        showNBSP(cm);
       }
       disableButton.onclick = function() {
         toggleApp(cm);
