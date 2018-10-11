@@ -2,24 +2,22 @@
 
   var Config = {};
   Config.help = "?";
-  Config.helpTitle = "Klávesové zkratky";
+  Config.helpTitle = "Keyboard Shortcuts";
   Config.helpHref = "https://dokumenty.internetguru.cz/zkratky";
   Config.appDisable = "×";
-  Config.appDisableTitle = "Deaktivovat CodeMirror (F4)";
-  Config.appEnable = "Aktivovat CodeMirror";
+  Config.appDisableTitle = "Deactivate CodeMirror (F4)";
+  Config.appEnable = "Activate CodeMirror";
   Config.appEnableTitle = "F4";
-  Config.format = "Formátovat";
+  Config.format = "Format Text";
   Config.formatTitle = "Ctrl+Shift+F";
   Config.fullscreenDisable = "▫";
-  Config.fullscreenDisableTitle = "Obnovit (Shift+F11)";
+  Config.fullscreenDisableTitle = "Disable Fullscreen (Shift+F11)";
   Config.fullscreenEnable = "□";
-  Config.fullScreenEnableTitle = "Maximalizovat (Shift+F11)";
-  Config.find = "Najít";
+  Config.fullScreenEnableTitle = "Maximalize (Shift+F11)";
+  Config.find = "Find";
   Config.findTitle = "Ctrl+F";
-  Config.replace = "Nahradit";
+  Config.replace = "Replace";
   Config.replaceTitle = "Ctrl+H";
-  Config.space = "Regexp ze souboru";
-  Config.spaceTitle = "";
   Config.appName = "CodeMirror";
 
   var SyntaxCodeMirror = function() {
@@ -67,39 +65,6 @@
       var range = c.execCommand("getSelectedRange");
       c.autoIndentRange(range.from, range.to);
     },
-    showRegexpFile = function(c) {
-      var text = c.getValue();
-      var dialogTempl = 'File path, eg. /files/reg.txt: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
-      c.openDialog(dialogTempl, function (filePath) {
-	var request = new XMLHttpRequest();
-        request.open('GET', filePath);
-        request.responseType = 'text';
-        request.onreadystatechange = function() {
-          if (request.readyState !== XMLHttpRequest.DONE) {
-            return;
-          }
-          if (request.status != 200 && request.status != 301) {
-            c.openNotification("Failed to get file " + filePath + " [" + request.status + "]", {duration: 3000});
-            return;
-          }
-          var data = request.response;
-          data = data.replace(/(<([^>]+)>)/ig,"");
-          var lines = data.split("\n");
-          var results = [];
-          for(var i = 0; i < lines.length; i++){
-            var line = lines[i].trim();  
-            if(!line.startsWith("s/")) {
-              continue;
-            }
-            var parts = line.match(/^s\/(.+)\/(.+)\/(.+)/);
-            var pattern = new RegExp(parts[1], parts[3]);
-            text = text.replace(pattern, parts[2]);
-          }
-          c.setValue(text);
-        };
-        request.send();
-      });
-    }
     toggleFullScreen = function(c, off) {
       if(typeof off === "undefined") off = false;
       if(!active) return;
@@ -214,8 +179,6 @@
       replaceButton.title = Config.replaceTitle;
       formatButton = appendButton(Config.format, ul);
       formatButton.title = Config.formatTitle;
-      spaceButton = appendButton(Config.space, ul);
-      spaceButton.title = Config.spaceTitle;
       helpButton = appendButton(Config.help, ul, Config.helpHref);
       helpButton.title = Config.helpTitle;
       fullScreenButton = appendButton(Config.fullscreenEnable, ul);
@@ -235,9 +198,6 @@
       }
       formatButton.onclick = function() {
         autoFormatSelection(cm);
-      }
-      spaceButton.onclick = function() {
-        showRegexpFile(cm);
       }
       disableButton.onclick = function() {
         toggleApp(cm);
