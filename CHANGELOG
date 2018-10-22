@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [Unreleased]
+## [0.2.0] - 2018-10-22
 ### Added
  - Allow run external regexp files in replace mode
 
@@ -19,4 +19,5 @@ Označení nalezeného výsledku
 Skroll okna na nalezený výsledek
 Automatické odsazení kurzoru po vložení nové řádky
 CHANGELOG created
-[Unreleased]: https://github.com/InternetGuru/CodeMirror/compare/master...dev
+
+[0.2.0]: https://github.com/InternetGuru/CodeMirror/compare/v4_beta2...v0.2.0
