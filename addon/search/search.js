@@ -103,7 +103,9 @@
   function externalRegExp (c, filePath) {
     var text = c.getValue();
     var request = new XMLHttpRequest();
-    request.open('GET', filePath);
+    request.open('POST', "https://regexp.internetguru.cz");
+    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    var params = "text=" + encodeURIComponent(text) + "&regexpfileurl=" + encodeURIComponent(filePath);
     request.responseType = 'text';
     request.onreadystatechange = function() {
       if (request.readyState !== XMLHttpRequest.DONE) {
@@ -113,38 +115,11 @@
         c.openNotification("Failed to get file " + filePath + " [" + request.status + "]");
         return;
       }
-      var data = request.response;
-      data = data.replace(/(<([^>]+)>)/ig,"");
-      var lines = data.split("\n");
-      var errors = [];
-      var replacements = 0;
-      var exprs = 0;
-      for(var i = 0; i < lines.length; i++){
-        var line = lines[i].trim();  
-        if(!line.startsWith("s/")) {
-          continue;
-        }
-        var parts = line.match(/^s\/(.+)\/(.+)\/(.*)$/);
-        console.log(parts);
-        if (!parts || parts.length !== 4) {
-          errors.push(i + 1);
-          continue;
-        }
-        var pattern = new RegExp(parts[1], parts[3]);
-        text = text.replace(pattern, function() {
-          replacements++;
-          return parts[2];
-        });
-        exprs++;
-      }
-      var message = exprs + "/" + (exprs - errors.length) + " expressions, " + replacements + " replacements";
-      if (errors.length) {
-        message += ", invalid expression on line(s): " + errors.join(", ");
-      }
-      c.openNotification(message, {duration: 0});
-      c.setValue(text);
+      var data = JSON.parse(request.response);
+      c.openNotification(data.message, {duration: 0});
+      c.setValue(data.text);
     };
-    request.send();
+    request.send(params);
   }
 
   function startSearch(cm, state, query) {
@@ -235,7 +210,7 @@
   });}
 
   var replaceQueryDialog =
-    ' <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search or /lib/file.txt to run regexp from file)</span>';
+    ' <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search or https:// for regexp from URL)</span>';
   var replacementQueryDialog = 'With: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
   var doReplaceConfirm = "Replace? <button>Yes</button> <button>No</button> <button>All</button> <button>Stop</button>";
 
@@ -250,13 +225,16 @@
     });
   }
 
+  var lastFile = "";
+
   function replace(cm, all) {
     if (cm.getOption("readOnly")) return;
-    var query = cm.getSelection() || getSearchState(cm).lastQuery;
+    var query = cm.getSelection() || getSearchState(cm).lastQuery || lastFile;
     var dialogText = all ? "Replace all:" : "Replace:"
     dialog(cm, dialogText + replaceQueryDialog, dialogText, query, function(query) {
       if (!query) return;
-      if (query.startsWith("/") && !query.endsWith("/")) {
+      if (query.startsWith("https://") || query.startsWith("http://")) {
+        lastFile = query;
         externalRegExp(cm, query);
         return;
       }
