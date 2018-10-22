@@ -100,6 +100,28 @@
   var queryDialog =
     'Search: <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search)</span>';
 
+  function externalRegExp (c, filePath) {
+    var text = c.getValue();
+    var request = new XMLHttpRequest();
+    request.open('POST', "https://regexp.internetguru.cz");
+    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    var params = "text=" + encodeURIComponent(text) + "&regexpfileurl=" + encodeURIComponent(filePath);
+    request.responseType = 'text';
+    request.onreadystatechange = function() {
+      if (request.readyState !== XMLHttpRequest.DONE) {
+        return;
+      }
+      if (request.status != 200 && request.status != 301) {
+        c.openNotification("Failed to get file " + filePath + " [" + request.status + "]");
+        return;
+      }
+      var data = JSON.parse(request.response);
+      c.openNotification(data.message, {duration: 0});
+      c.setValue(data.text);
+    };
+    request.send(params);
+  }
+
   function startSearch(cm, state, query) {
     state.queryText = query;
     state.query = parseQuery(query);
@@ -188,7 +210,7 @@
   });}
 
   var replaceQueryDialog =
-    ' <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search)</span>';
+    ' <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search or https:// for regexp from URL)</span>';
   var replacementQueryDialog = 'With: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
   var doReplaceConfirm = "Replace? <button>Yes</button> <button>No</button> <button>All</button> <button>Stop</button>";
 
@@ -203,12 +225,19 @@
     });
   }
 
+  var lastFile = "";
+
   function replace(cm, all) {
     if (cm.getOption("readOnly")) return;
-    var query = cm.getSelection() || getSearchState(cm).lastQuery;
+    var query = cm.getSelection() || getSearchState(cm).lastQuery || lastFile;
     var dialogText = all ? "Replace all:" : "Replace:"
     dialog(cm, dialogText + replaceQueryDialog, dialogText, query, function(query) {
       if (!query) return;
+      if (query.startsWith("https://") || query.startsWith("http://")) {
+        lastFile = query;
+        externalRegExp(cm, query);
+        return;
+      }
       query = parseQuery(query);
       dialog(cm, replacementQueryDialog, "Replace with:", "", function(text) {
         text = parseString(text)

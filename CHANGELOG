@@ -1,5 +1,15 @@
+# Change Log
+All notable changes to this project will be documented in this file.
 
-0.1 | 2016-04-23
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+
+## [Unreleased]
+### Added
+ - Allow run external regexp files in replace mode
+
+## 0.1 | 2016-04-23
 
 převedení projektu do composeru
 sublime.js: Ctrl+d ignoruje velikosti písmen
@@ -9,3 +19,4 @@ Označení nalezeného výsledku
 Skroll okna na nalezený výsledek
 Automatické odsazení kurzoru po vložení nové řádky
 CHANGELOG created
+[Unreleased]: https://github.com/InternetGuru/CodeMirror/compare/master...dev

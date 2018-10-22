@@ -2,21 +2,21 @@
 
   var Config = {};
   Config.help = "?";
-  Config.helpTitle = "Klávesové zkratky";
+  Config.helpTitle = "Keyboard Shortcuts";
   Config.helpHref = "https://dokumenty.internetguru.cz/zkratky";
   Config.appDisable = "×";
-  Config.appDisableTitle = "Deaktivovat CodeMirror (F4)";
-  Config.appEnable = "Aktivovat CodeMirror";
+  Config.appDisableTitle = "Deactivate CodeMirror (F4)";
+  Config.appEnable = "Activate CodeMirror";
   Config.appEnableTitle = "F4";
-  Config.format = "Formátovat";
+  Config.format = "Format Text";
   Config.formatTitle = "Ctrl+Shift+F";
   Config.fullscreenDisable = "▫";
-  Config.fullscreenDisableTitle = "Obnovit (Shift+F11)";
+  Config.fullscreenDisableTitle = "Disable Fullscreen (Shift+F11)";
   Config.fullscreenEnable = "□";
-  Config.fullScreenEnableTitle = "Maximalizovat (Shift+F11)";
-  Config.find = "Najít";
+  Config.fullScreenEnableTitle = "Maximalize (Shift+F11)";
+  Config.find = "Find";
   Config.findTitle = "Ctrl+F";
-  Config.replace = "Nahradit";
+  Config.replace = "Replace";
   Config.replaceTitle = "Ctrl+H";
   Config.appName = "CodeMirror";
 
