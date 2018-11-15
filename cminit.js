@@ -139,6 +139,7 @@
         extraKeys: CodeMirror.normalizeKeyMap({
           "Tab": false,
           "Shift-Tab": false,
+	  "Ctrl-Shift-R": false,
           "Ctrl-Up": function(c) {
             if(c.getOption("fullScreen"))
               c.execCommand("scrollLineUp");
@@ -154,6 +155,7 @@
           "Ctrl-E": "deleteLine",
           "End": "goLineRight",
           "Home": "goLineLeftSmart",
+          "Ctrl-Shift-H": "replaceAll",
           "Ctrl-Shift-F": function(c) { autoFormatSelection(c); },
           "Ctrl-Shift-I": function(c) { autoIndentSelection(c); },
           "F3": function(c) { c.execCommand("findNext"); },
