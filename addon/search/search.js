@@ -103,7 +103,7 @@
   function externalRegExp (c, filePath) {
     var text = c.getValue();
     var request = new XMLHttpRequest();
-    request.open('POST', "https://regexp.internetguru.cz");
+    request.open('POST', "https://regex.internetguru.cz");
     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     var params = "text=" + encodeURIComponent(text) + "&regexpfileurl=" + encodeURIComponent(filePath);
     request.responseType = 'text';
