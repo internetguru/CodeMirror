@@ -9,7 +9,7 @@
   Config.appEnable = "Activate CodeMirror";
   Config.appEnableTitle = "F4";
   Config.format = "Beautify";
-  Config.formatTitle = "Ctrl+Shift+F";
+  Config.formatTitle = "Ctrl+Shift+B";
   Config.fullscreenDisable = "▫";
   Config.fullscreenDisableTitle = "Disable Fullscreen (Shift+F11)";
   Config.fullscreenEnable = "□";
@@ -162,7 +162,7 @@
           "End": "goLineRight",
           "Home": "goLineLeftSmart",
           "Ctrl-Shift-H": "replaceAll",
-          "Ctrl-Shift-F": function(c) { autoFormatSelection(c); },
+          "Ctrl-Shift-B": function(c) { autoFormatSelection(c); },
           "Ctrl-Shift-I": function(c) { autoIndentSelection(c); },
           "F3": function(c) { c.execCommand("findNext"); },
           "Shift-F3": function(c) { c.execCommand("findPrev"); },
