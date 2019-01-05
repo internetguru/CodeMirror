@@ -8,7 +8,7 @@
   Config.appDisableTitle = "Deactivate CodeMirror (F4)";
   Config.appEnable = "Activate CodeMirror";
   Config.appEnableTitle = "F4";
-  Config.format = "Format Text";
+  Config.format = "Beautify";
   Config.formatTitle = "Ctrl+Shift+F";
   Config.fullscreenDisable = "▫";
   Config.fullscreenDisableTitle = "Disable Fullscreen (Shift+F11)";
@@ -102,11 +102,17 @@
         switch (key) {
           // F4
           case 115:
+          if (textarea.closest("form.hideable-hide")) {
+            break;
+          }
           toggleApp(cm);
           break;
           // Shift + F11
           case 122:
           if(isShift) {
+            if (textarea.closest("form.hideable-hide")) {
+              break;
+            }
             toggleFullScreen(cm);
             cm.focus();
             break;
@@ -139,7 +145,7 @@
         extraKeys: CodeMirror.normalizeKeyMap({
           "Tab": false,
           "Shift-Tab": false,
-	  "Ctrl-Shift-R": false,
+	        "Ctrl-Shift-R": false,
           "Ctrl-Up": function(c) {
             if(c.getOption("fullScreen"))
               c.execCommand("scrollLineUp");
