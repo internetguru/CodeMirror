@@ -181,17 +181,17 @@
       var ul = document.createElement("ul");
       ul.className="codemirror-user-controll";
 
-      findButton = appendButton(Config.find, ul);
+      var findButton = appendButton(Config.find, ul);
       findButton.title = Config.findTitle;
-      replaceButton = appendButton(Config.replace, ul);
+      var replaceButton = appendButton(Config.replace, ul);
       replaceButton.title = Config.replaceTitle;
-      formatButton = appendButton(Config.format, ul);
+      var formatButton = appendButton(Config.format, ul);
       formatButton.title = Config.formatTitle;
-      helpButton = appendButton(Config.help, ul, Config.helpHref);
+      var helpButton = appendButton(Config.help, ul, Config.helpHref);
       helpButton.title = Config.helpTitle;
-      fullScreenButton = appendButton(Config.fullscreenEnable, ul);
+      var fullScreenButton = appendButton(Config.fullscreenEnable, ul);
       fullScreenButton.title = Config.fullScreenEnableTitle;
-      disableButton = appendButton(Config.appDisable, ul);
+      var disableButton = appendButton(Config.appDisable, ul);
       disableButton.title = Config.appDisableTitle;
       textarea.nextSibling.insertBefore(ul, textarea.nextSibling.firstChild);
 
