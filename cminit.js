@@ -26,6 +26,7 @@
     cm = null,
     scm = null,
     textarea = null,
+    fullScreenButton = null,
     visible = true,
     active = true,
     activateUl = null,
@@ -145,7 +146,7 @@
         extraKeys: CodeMirror.normalizeKeyMap({
           "Tab": false,
           "Shift-Tab": false,
-	        "Ctrl-Shift-R": false,
+          "Ctrl-Shift-R": false,
           "Ctrl-Up": function(c) {
             if(c.getOption("fullScreen"))
               c.execCommand("scrollLineUp");
@@ -189,7 +190,7 @@
       formatButton.title = Config.formatTitle;
       var helpButton = appendButton(Config.help, ul, Config.helpHref);
       helpButton.title = Config.helpTitle;
-      var fullScreenButton = appendButton(Config.fullscreenEnable, ul);
+      fullScreenButton = appendButton(Config.fullscreenEnable, ul);
       fullScreenButton.title = Config.fullScreenEnableTitle;
       var disableButton = appendButton(Config.appDisable, ul);
       disableButton.title = Config.appDisableTitle;
