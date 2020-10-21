@@ -3,7 +3,7 @@
   var Config = {};
   Config.help = "?";
   Config.helpTitle = "Keyboard Shortcuts";
-  Config.helpHref = "https://dokumenty.internetguru.cz/zkratky";
+  Config.helpHref = "https://docs.google.com/document/d/1Scrd-2D6OhJPFxt5oC9ktSC8Vll9j0Iyq8lSRFqXDYs";
   Config.appDisable = "×";
   Config.appDisableTitle = "Deactivate CodeMirror (F4)";
   Config.appEnable = "Activate CodeMirror";
