@@ -151,6 +151,10 @@
     canSkip = false;
   }
 
+  function escapeRegex(string) {
+    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
   function findNextSelection(cm, skip) {
     var from = cm.getCursor("from"), to = cm.getCursor("to");
     var fullWord = cm.state.sublimeFindFullWord == cm.doc.sel;
@@ -161,7 +165,7 @@
       cm.setSelection(word.from, word.to);
       fullWord = true;
     } else {
-      var text = cm.getRange(from, to);
+      var text = escapeRegex(cm.getRange(from, to));
       var query = fullWord ? new RegExp("\\b" + text + "\\b", "i") : new RegExp(text, "i");
       var cur = cm.getSearchCursor(query, to);
       if (cur.findNext()) {
