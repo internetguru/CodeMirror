@@ -30,6 +30,7 @@
     visible = true,
     active = true,
     activateUl = null,
+    changeHandler = null,
     appendButton = function(text, ul, href) {
       var li = document.createElement("li");
       ul.appendChild(li);
@@ -53,6 +54,7 @@
         textarea.focus();
       } else {
         _init();
+        setChangeEvent(changeHandler)
         activateUl.style.display = "none";
         cm.focus();
       }
@@ -215,6 +217,10 @@
     _init = function() {
       initEditor();
       initUserMenu();
+    },
+    setChangeEvent = function (handler) {
+      cm.on("change", handler)
+      changeHandler = handler
     }
     // public
     return {
@@ -228,6 +234,9 @@
       },
       getInstance : function() {
         return cm;
+      },
+      setChangeEvent : function(handler) {
+        setChangeEvent(handler)
       }
     }
   };
@@ -235,6 +244,7 @@
   var textareas = document.querySelectorAll('textarea.codemirror');
   var cm = new SyntaxCodeMirror();
   cm.init(textareas[0], cm);
-  win.CodeMirrorInstance = cm.getInstance();
+  win.SyntaxCodeMirror = cm;
 
 })(window);
+
